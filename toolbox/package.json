@@ -23,5 +23,7 @@
     "cordova-plugin-file-transfer",
     "cordova-camera-roll"
   ],
-  "cordovaPlatforms": []
+  "cordovaPlatforms": [
+    "ios"
+  ]
 }
