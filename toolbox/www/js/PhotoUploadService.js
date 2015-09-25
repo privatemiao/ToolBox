@@ -1,17 +1,16 @@
 angular.module('generic.services', []).factory('PhotoUploadService', function($q) {
 	return {
-		echo : function() {
-			console.log('Here is Echo from Service.');
-		},
-		gatherMediaFiles : function($scope, callback){
-			$scope.photos = [];
-			CameraRoll.getPhotos(function(photo){
-				if (photo){
-					$scope.photos.push(photo);
-				}else{
-					callback();
+		gatherPhotos : function(photos) {
+			var defer = $q.defer();
+			photos.length = 0;
+			CameraRoll.getPhotos(function(photo) {
+				if (photo) {
+					photos.push(photo);
+				} else {
+					defer.resolve();
 				}
 			});
+			return defer.promise;
 		}
 	};
 });
