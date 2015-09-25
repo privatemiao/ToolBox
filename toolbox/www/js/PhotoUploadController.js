@@ -26,26 +26,21 @@ angular.module('generic.controllers', []).controller('PhotoUploadController', fu
 			scope : $scope
 		});
 		
+		$scope.$watch('progress.imageSrc', function(newVal, oldVal) {
+			if (newVal) {
+				imageDom.src = newVal;
+			} else {
+				imageDom.src = 'img/blank.png';
+			}
+		});
+		
 		PhotoUploadService.gatherPhotos($scope.photos).then(function(){
 			$timeout(function(){
 				gatherProgressPopup.close();
 			}, 1000);
 		});
 		
-//		$timeout(function(){
-//			$scope.photos.push('1');
-//			$timeout(function(){
-//				gatherProgressPopup.close();
-//			}, 1000);
-//		}, 1000);
-
-//		$scope.$watch('progress.imageSrc', function(newVal, oldVal) {
-//			if (newVal) {
-//				imageDom.src = newVal;
-//			} else {
-//				imageDom.src = 'img/blank.png';
-//			}
-//		});
+		
 
 	});
 });
