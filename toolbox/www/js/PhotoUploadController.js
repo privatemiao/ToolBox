@@ -25,7 +25,7 @@ angular.module('generic.controllers', []).controller('PhotoUploadController', fu
 			title : '发现媒体文件，请稍后！',
 			scope : $scope
 		});
-		
+
 		$scope.$watch('progress.imageSrc', function(newVal, oldVal) {
 			if (newVal) {
 				imageDom.src = newVal;
@@ -33,14 +33,20 @@ angular.module('generic.controllers', []).controller('PhotoUploadController', fu
 				imageDom.src = 'img/blank.png';
 			}
 		});
-		
-		PhotoUploadService.gatherPhotos($scope.photos).then(function(){
-			$timeout(function(){
+
+		PhotoUploadService.gatherPhotos($scope.photos).then(function() {
+			$timeout(function() {
 				gatherProgressPopup.close();
+				$timeout(function() {
+					navigator.notification.confirm('请在WIFI环境下使用！', function(result) {
+						if (result !== 1) {
+							return;
+						}
+						PhotoUploadService.uploadPhotos($scope.photos, $scope.progress);
+					}, '确认？', [ '上传', '取消' ]);
+				}, 200);
 			}, 1000);
 		});
-		
-		
 
 	});
 });

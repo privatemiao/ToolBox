@@ -11,6 +11,9 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 				}
 			});
 			return defer.promise;
+		},
+		uploadPhotos : function(photos, progress) {
+
 		}
 	};
 });
