@@ -22,7 +22,8 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 							lastModified : file.lastModified,
 							localURL : file.localURL,
 							size : file.size,
-							type : file.type
+							type : file.type,
+							uuid : device.uuid
 						}
 						progress.type = (function() {
 							if (f.type.startsWith('image/')) {
