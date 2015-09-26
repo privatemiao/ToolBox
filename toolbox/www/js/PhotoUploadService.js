@@ -13,6 +13,18 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 			return defer.promise;
 		},
 		uploadPhotos : function(photos, progress) {
+			// resolveLocalFileSystemURL
+			(function prepareUpload() {
+				console.log(photos[progress.currentIndex++]);
+				progress.name = progress.currentIndex;
+				if (photos.length > progress.currentIndex){
+					prepareUpload();
+				}else{
+					console.log(progress.currentIndex);
+				}
+			})();
+		},
+		uploadPhoto : function(file) {
 
 		}
 	};

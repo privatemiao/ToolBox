@@ -6,7 +6,6 @@ angular.module('generic.controllers', []).controller('PhotoUploadController', fu
 			currentIndex : 0,
 			name : null,
 			type : null,
-			total : 0,
 			dom : {
 				progressDom : document.querySelector('#photo-upload-progress')
 			},
@@ -37,6 +36,10 @@ angular.module('generic.controllers', []).controller('PhotoUploadController', fu
 		PhotoUploadService.gatherPhotos($scope.photos).then(function() {
 			$timeout(function() {
 				gatherProgressPopup.close();
+				if ($scope.photos.length === 0){
+					navigator.notification.alert('没有找到照片！', null, '提示');
+					return;
+				}
 				$timeout(function() {
 					navigator.notification.confirm('请在WIFI环境下使用！', function(result) {
 						if (result !== 1) {
