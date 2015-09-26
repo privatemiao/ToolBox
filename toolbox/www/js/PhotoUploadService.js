@@ -1,4 +1,5 @@
 angular.module('generic.services', []).factory('PhotoUploadService', function($q, $timeout) {
+	var uri = encodeURI('http://192.168.8.100:8888/upload');
 	return {
 		gatherPhotos : function(photos) {
 			var defer = $q.defer();
@@ -49,19 +50,38 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 		uploadPhoto : function(file, progress) {
 			progress.clear();
 			var defer = $q.defer();
-			var i = 0;
-			(function _progress() {
-				i += 10;
-				progress.updateProgress(i);
-				$timeout(function() {
-					if (i < 100) {
-						_progress();
-					} else {
-						defer.resolve();
-					}
-				}, 200);
-			})();
+
+			var properties = {
+				name : file.name,
+				lastModified : file.lastModified,
+				size : file.size,
+				type : file.type,
+				uuid : device.uuid
+			};
+
+			var ft = new FileTransfer();
+			ft.onprogress = function(progressEvent) {
+				if (progressEvent.lengthComputable) {
+					progress.updateProgress(parseInt(progressEvent.loaded / progressEvent.total * 100));
+				}
+			};
+			ft.upload(file.localURL, uri, function(response) {
+				defer.resolve(response);
+			}, function(error) {
+				console.error('Error->', error);
+			}, {
+				fileKey : 'file',
+				mimeType : file.type,
+				fileName : file.name,
+				params : {
+					properties : JSON.stringify(properties)
+				}
+			});
+
 			return defer.promise;
+		},
+		isExist : function(fileProperties){
+			
 		}
 	};
 });
