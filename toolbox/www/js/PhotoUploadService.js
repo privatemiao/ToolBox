@@ -33,6 +33,8 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 							}
 						})();
 						progress.name = f.name;
+						progress.imageSrc = f.localURL;
+						progress.updatePhoto();
 						reference.uploadPhoto(f, progress).then(function() {
 							if (photos.length > progress.currentIndex) {
 								prepareUpload();
@@ -45,14 +47,15 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 			})();
 		},
 		uploadPhoto : function(file, progress) {
-			console.log('UploadFile->', file);
+			progress.clear();
 			var defer = $q.defer();
 			var i = 0;
-			(function progress() {
+			(function _progress() {
 				i += 10;
+				progress.updateProgress(i);
 				$timeout(function() {
 					if (i < 100) {
-						progress();
+						_progress();
 					} else {
 						defer.resolve();
 					}

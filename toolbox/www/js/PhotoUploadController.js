@@ -1,42 +1,38 @@
 angular.module('generic.controllers', []).controller('PhotoUploadController', function($ionicPlatform, $scope, PhotoUploadService, $ionicPopup, $timeout) {
 	$ionicPlatform.ready(function() {
-
+		
+		var progressDom = document.querySelector('#photo-upload-progress'), imageDom = document.querySelector('#photo-upload-image');
 		$scope.progress = {
-			imageSrc : null,
+			imageSrc : 'img/blank.png',
 			currentIndex : 0,
 			name : null,
 			type : null,
-			dom : {
-				progressDom : document.querySelector('#photo-upload-progress')
-			},
 
 			clear : function() {
-				this.imageSrc = 'img/blank.png';
-				this.dom.progressDom.value = 0;
+				this.updateProgress(0);
 			},
 			updateProgress : function(val) {
-				this.dom.progressDom.value = val;
+				progressDom.value = val;
+			},
+			updatePhoto : function(){
+				if (this.type === 'video'){
+					imageDom.src = 'img/video-placeholder.jpg';
+				}else{
+					imageDom.src = this.imageSrc;
+				}
 			}
 		};
 		$scope.photos = [];
-		var photos = [], imageDom = document.querySelector('#photo-upload-image'), gatherProgressPopup = $ionicPopup.show({
+		var photos = [], gatherProgressPopup = $ionicPopup.show({
 			template : '<span>已发现 {{photos.length}} 个。</span>',
 			title : '发现媒体文件，请稍后！',
 			scope : $scope
 		});
 
-		$scope.$watch('progress.imageSrc', function(newVal, oldVal) {
-			if (newVal) {
-				imageDom.src = newVal;
-			} else {
-				imageDom.src = 'img/blank.png';
-			}
-		});
-
 		PhotoUploadService.gatherPhotos($scope.photos).then(function() {
 			$timeout(function() {
 				gatherProgressPopup.close();
-				if ($scope.photos.length === 0){
+				if ($scope.photos.length === 0) {
 					navigator.notification.alert('没有找到照片！', null, '提示');
 					return;
 				}
