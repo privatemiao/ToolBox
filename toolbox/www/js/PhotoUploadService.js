@@ -18,7 +18,6 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 			(function prepareUpload() {
 				resolveLocalFileSystemURL(photos[progress.currentIndex++], function(entry) {
 					entry.file(function(file) {
-						console.log(file);
 						var f = {
 							name : file.name,
 							lastModified : file.lastModified,
@@ -40,6 +39,8 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 						reference.uploadPhoto(f, progress).then(function() {
 							if (photos.length > progress.currentIndex) {
 								prepareUpload();
+							}else{
+								navigator.notification.alert('同步完成！', null, '提示');
 							}
 						}, function(error) {
 							console.log('ERROR->', error)
