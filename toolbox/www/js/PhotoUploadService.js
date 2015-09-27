@@ -60,8 +60,8 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 			};
 
 			this.isExist(properties).then(function(response) {
-				if (response) {
-					console.log('该文件已经同步过！');
+				if (response.data.success) {
+					progress.name += ' ' + response.data.message;
 					defer.resolve();
 				} else {
 					var ft = new FileTransfer();
@@ -93,7 +93,7 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 		isExist : function(fileProperties) {
 			var defer = $q.defer();
 			$http.post(CHECK_EXIST_URI, fileProperties).then(function(response) {
-				defer.resolve(response.data.success);
+				defer.resolve(response);
 			}, function(error) {
 				defer.reject(error);
 			});
