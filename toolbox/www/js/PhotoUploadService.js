@@ -18,6 +18,7 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 			(function prepareUpload() {
 				resolveLocalFileSystemURL(photos[progress.currentIndex++], function(entry) {
 					entry.file(function(file) {
+						console.log(file);
 						var f = {
 							name : file.name,
 							lastModified : file.lastModified,
@@ -56,7 +57,11 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 				lastModified : file.lastModified,
 				size : file.size,
 				type : file.type,
-				uuid : device.uuid
+				uuid : device.uuid,
+				date : (function() {
+					var date = new Date(file.lastModified);
+					return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+				})()
 			};
 
 			this.isExist(properties).then(function(response) {
