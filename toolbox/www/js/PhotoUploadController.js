@@ -1,4 +1,4 @@
-angular.module('generic.controllers', []).controller('PhotoUploadController', function($ionicPlatform, $scope, PhotoUploadService, $ionicPopup, $timeout) {
+angular.module('generic.controllers').controller('PhotoUploadController', function($ionicPlatform, $scope, PhotoUploadService, $ionicPopup, $timeout) {
 	$ionicPlatform.ready(function() {
 		
 		var progressDom = document.querySelector('#photo-upload-progress'), imageDom = document.querySelector('#photo-upload-image');

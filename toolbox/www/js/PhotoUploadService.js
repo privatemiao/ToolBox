@@ -1,4 +1,4 @@
-angular.module('generic.services', []).factory('PhotoUploadService', function($q, $timeout, $http) {
+angular.module('generic.services').factory('PhotoUploadService', function($q, $timeout, $http) {
 	var UPLOAD_URI = encodeURI('http://192.168.8.100:8888/upload'), CHECK_EXIST_URI = 'http://192.168.8.100:8888/isexist';
 	return {
 		gatherPhotos : function(photos) {
