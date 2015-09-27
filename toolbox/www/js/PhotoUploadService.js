@@ -1,5 +1,5 @@
-angular.module('generic.services', []).factory('PhotoUploadService', function($q, $timeout) {
-	var uri = encodeURI('http://192.168.8.100:8888/upload');
+angular.module('generic.services', []).factory('PhotoUploadService', function($q, $timeout, $http) {
+	var UPLOAD_URI = encodeURI('http://192.168.8.100:8888/upload'), CHECK_EXIST_URI = 'http://192.168.8.100:8888/isexist';
 	return {
 		gatherPhotos : function(photos) {
 			var defer = $q.defer();
@@ -59,29 +59,45 @@ angular.module('generic.services', []).factory('PhotoUploadService', function($q
 				uuid : device.uuid
 			};
 
-			var ft = new FileTransfer();
-			ft.onprogress = function(progressEvent) {
-				if (progressEvent.lengthComputable) {
-					progress.updateProgress(parseInt(progressEvent.loaded / progressEvent.total * 100));
+			this.isExist(properties).then(function(response) {
+				if (response) {
+					console.log('该文件已经同步过！');
+					defer.resolve();
+				} else {
+					var ft = new FileTransfer();
+					ft.onprogress = function(progressEvent) {
+						if (progressEvent.lengthComputable) {
+							progress.updateProgress(parseInt(progressEvent.loaded / progressEvent.total * 100));
+						}
+					};
+					ft.upload(file.localURL, UPLOAD_URI, function(response) {
+						defer.resolve(response);
+					}, function(error) {
+						console.error('Error->', error);
+					}, {
+						fileKey : 'file',
+						mimeType : file.type,
+						fileName : file.name,
+						params : {
+							properties : JSON.stringify(properties)
+						}
+					});
 				}
-			};
-			ft.upload(file.localURL, uri, function(response) {
-				defer.resolve(response);
 			}, function(error) {
-				console.error('Error->', error);
-			}, {
-				fileKey : 'file',
-				mimeType : file.type,
-				fileName : file.name,
-				params : {
-					properties : JSON.stringify(properties)
-				}
+				console.log('ERROR->', error);
+				defer.reject(error);
 			});
 
 			return defer.promise;
 		},
-		isExist : function(fileProperties){
-			
+		isExist : function(fileProperties) {
+			var defer = $q.defer();
+			$http.post(CHECK_EXIST_URI, fileProperties).then(function(response) {
+				defer.resolve(response.data.success);
+			}, function(error) {
+				defer.reject(error);
+			});
+			return defer.promise;
 		}
 	};
 });
