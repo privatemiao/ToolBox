@@ -88,7 +88,6 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 						}
 					};
 					ft.upload(file.localURL, _variables.uploadURI, function(response) {
-						console.log(response);
 						defer.resolve(response);
 					}, function(error) {
 						defer.reject(response);
