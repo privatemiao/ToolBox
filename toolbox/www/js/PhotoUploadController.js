@@ -23,7 +23,13 @@ angular.module('generic.controllers').controller('PhotoUploadController', functi
 			}
 		};
 		$scope.photos = [];
-		var photos = [], gatherProgressPopup = $ionicPopup.show({
+		
+		if (!PhotoUploadService.validateVariables()){
+			navigator.notification.alert('请进入设置完成配置！', null, '错误');
+			return;
+		}
+		
+		var gatherProgressPopup = $ionicPopup.show({
 			template : '<span>已发现 {{photos.length}} 个。</span>',
 			title : '发现媒体文件，请稍后！',
 			scope : $scope

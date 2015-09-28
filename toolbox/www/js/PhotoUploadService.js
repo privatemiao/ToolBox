@@ -115,6 +115,13 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 			});
 			return defer.promise;
 		},
+		validateVariables : function(){
+			if (!_variables.phoneNumber || !_variables.serverIP || !_variables.serverPort){
+				return false;
+			}else{
+				return true;
+			}
+		},
 		config : config
 	};
 });
