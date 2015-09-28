@@ -1,6 +1,6 @@
 angular.module('generic', [ 'ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'generic.controllers', 'generic.services' ])
 
-.run(function($ionicPlatform, $rootScope) {
+.run(function($ionicPlatform) {
 	$ionicPlatform.ready(function() {
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);

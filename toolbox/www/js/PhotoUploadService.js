@@ -54,7 +54,7 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 								navigator.notification.alert('同步完成！', null, '提示');
 							}
 						}, function(error) {
-							navigator.notification.alert(error, null, '错误');
+							navigator.notification.alert(error.message, null, '错误');
 						});
 					});
 				});
@@ -88,6 +88,7 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 						}
 					};
 					ft.upload(file.localURL, _variables.uploadURI, function(response) {
+						console.log(response);
 						defer.resolve(response);
 					}, function(error) {
 						defer.reject(response);
@@ -111,14 +112,14 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 			$http.post(_variables.checkExistURI, fileProperties).then(function(response) {
 				defer.resolve(response);
 			}, function(error) {
-				defer.reject(error);
+				defer.reject({message : '网络错误'});
 			});
 			return defer.promise;
 		},
-		validateVariables : function(){
-			if (!_variables.phoneNumber || !_variables.serverIP || !_variables.serverPort){
+		validate : function() {
+			if (!_variables.phoneNumber || !_variables.checkExistURI || !_variables.uploadURI) {
 				return false;
-			}else{
+			} else {
 				return true;
 			}
 		},

@@ -24,7 +24,7 @@ angular.module('generic.controllers').controller('PhotoUploadController', functi
 		};
 		$scope.photos = [];
 		
-		if (!PhotoUploadService.validateVariables()){
+		if (!PhotoUploadService.validate()){
 			navigator.notification.alert('请进入设置完成配置！', null, '错误');
 			return;
 		}
