@@ -1,12 +1,23 @@
 angular.module('generic', [ 'ionic', 'ngCordova', 'ngIOS9UIWebViewPatch', 'generic.controllers', 'generic.services' ])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope) {
 	$ionicPlatform.ready(function() {
 		if (window.cordova && window.cordova.plugins.Keyboard) {
 			cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
 		}
 		if (window.StatusBar) {
 			StatusBar.styleDefault();
+		}
+
+		var variables = localStorage.getItem('variables');
+		if (variables) {
+			window.variables = JSON.parse(variables);
+		} else {
+			window.variables = {
+				phoneNumber : null,
+				serverIP : '192.168.8.100',
+				serverPort : '8888'
+			};
 		}
 	});
 }).config(function($stateProvider, $urlRouterProvider) {

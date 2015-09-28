@@ -1,7 +1,15 @@
-angular.module('generic.controllers').controller('SettingController', function($ionicPlatform, $scope, $ionicPopup, $timeout) {
+angular.module('generic.controllers').controller('SettingController', function($ionicPlatform, PhotoUploadService, $scope, $rootScope, $ionicPopup, $timeout) {
 	$ionicPlatform.ready(function() {
-		$scope.variables = {
-			phoneNumber : '13451567003'
-		};
+		if (window.variables){
+			$scope.variables = window.variables;
+		}
+		
+		$rootScope.$on('$ionicView.leave', function(event, view) {
+			if (view.stateName === 'tab.setting'){
+				window.variables = angular.copy($scope.variables);
+				localStorage.setItem('variables', JSON.stringify(window.variables));
+				PhotoUploadService.config();
+			}
+		});
 	});
 });

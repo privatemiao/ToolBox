@@ -1,5 +1,16 @@
 angular.module('generic.services').factory('PhotoUploadService', function($q, $timeout, $http) {
-	var UPLOAD_URI = encodeURI('http://192.168.8.100:8888/upload'), CHECK_EXIST_URI = 'http://192.168.8.100:8888/isexist';
+	var _variables = {};
+
+	function config() {
+		_variables = {
+			uploadURI : encodeURI('http://' + window.variables.serverIP + ':' + window.variables.serverPort + '/upload'),
+			checkExistURI : 'http://' + window.variables.serverIP + ':' + window.variables.serverPort + '/isexist',
+			phoneNumber : window.variables.phoneNumber
+		};
+	}
+
+	config();
+
 	return {
 		gatherPhotos : function(photos) {
 			var defer = $q.defer();
@@ -24,7 +35,7 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 							localURL : file.localURL,
 							size : file.size,
 							type : file.type,
-							uuid : device.uuid
+							uuid : _variables.phoneNumber
 						}
 						progress.type = (function() {
 							if (f.type.startsWith('image/')) {
@@ -39,11 +50,11 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 						reference.uploadPhoto(f, progress).then(function() {
 							if (photos.length > progress.currentIndex) {
 								prepareUpload();
-							}else{
+							} else {
 								navigator.notification.alert('同步完成！', null, '提示');
 							}
 						}, function(error) {
-							console.log('ERROR->', error)
+							navigator.notification.alert(error, null, '错误');
 						});
 					});
 				});
@@ -58,7 +69,7 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 				lastModified : file.lastModified,
 				size : file.size,
 				type : file.type,
-				uuid : device.uuid,
+				uuid : _variables.phoneNumber,
 				date : (function() {
 					var date = new Date(file.lastModified);
 					return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
@@ -76,10 +87,10 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 							progress.updateProgress(parseInt(progressEvent.loaded / progressEvent.total * 100));
 						}
 					};
-					ft.upload(file.localURL, UPLOAD_URI, function(response) {
+					ft.upload(file.localURL, _variables.uploadURI, function(response) {
 						defer.resolve(response);
 					}, function(error) {
-						console.error('Error->', error);
+						defer.reject(response);
 					}, {
 						fileKey : 'file',
 						mimeType : file.type,
@@ -90,7 +101,6 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 					});
 				}
 			}, function(error) {
-				console.log('ERROR->', error);
 				defer.reject(error);
 			});
 
@@ -98,12 +108,13 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 		},
 		isExist : function(fileProperties) {
 			var defer = $q.defer();
-			$http.post(CHECK_EXIST_URI, fileProperties).then(function(response) {
+			$http.post(_variables.checkExistURI, fileProperties).then(function(response) {
 				defer.resolve(response);
 			}, function(error) {
 				defer.reject(error);
 			});
 			return defer.promise;
-		}
+		},
+		config : config
 	};
 });
