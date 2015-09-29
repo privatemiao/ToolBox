@@ -1,4 +1,4 @@
-angular.module('generic.services').factory('PhotoUploadService', function($q, $timeout, $http) {
+angular.module('generic.services').factory('PhotoUploadService', function($q, $timeout, $http, $filter) {
 	var _variables = {};
 
 	function config() {
@@ -72,7 +72,7 @@ angular.module('generic.services').factory('PhotoUploadService', function($q, $t
 				uuid : _variables.phoneNumber,
 				date : (function() {
 					var date = new Date(file.lastModified);
-					return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+					return $filter('date')(date, 'yyyy-MM-dd');
 				})()
 			};
 
