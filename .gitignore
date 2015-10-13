@@ -8,3 +8,4 @@ toolbox/resources
 toolbox/www/lib
 
 .project
+.DS_Store
