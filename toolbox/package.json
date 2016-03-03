@@ -22,7 +22,8 @@
     "cordova-plugin-file",
     "cordova-plugin-file-transfer",
     "cordova-camera-roll",
-    "cordova-plugin-dialogs"
+    "cordova-plugin-dialogs",
+    "ionic-plugin-keyboard"
   ],
   "cordovaPlatforms": [
     "ios"
